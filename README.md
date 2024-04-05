@@ -75,3 +75,8 @@ El resultado del script es un éxito, encuentra la flag al completo, y acierta c
 [22] The flag is: SW5GZXJuYW5kb1dlVHJ1c3Q
 [23] The flag is: SW5GZXJuYW5kb1dlVHJ1c3Q=
 ```
+
+## Herramientas
+* Burp Suite (community) - captura y análisis de paquetes
+* Postman, cURL - pruebas de payload
+* Python - script
