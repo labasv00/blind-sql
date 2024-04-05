@@ -9,7 +9,7 @@ timeout = 20
 
 max_length = 32
 found_value = ""
-margen = 0.2
+margen = 0.2  # Marge for some queries that end eaerlier.
 
 for i in range(0, max_length + 1):
     for character in printable:
